@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.posserver.posserverspringbootres.dao.DbMapper">
+    <update id="creatPayTable">
+        CREATE TABLE IF NOT EXISTS t_pay(
+           "mch_id" TEXT NOT NULL,
+           "out_trade_no" TEXT NOT NULL,
+           "total_fee" TEXT NOT NULL,
+           "auth_code" TEXT NOT NULL,
+           "app_id" TEXT,
+           "content" TEXT,
+           "pay_status" TEXT NOT NULL,
+           "pay_method" TEXT NOT NULL,
+           "only_id" INTEGER  NOT NULL,
+           PRIMARY KEY (out_trade_no,only_id)
+        )
+    </update>
+
+    <update id="createBaseDbTable">
+        CREATE TABLE IF NOT EXISTS t_base_db (
+        "group_id" TEXT NOT NULL,
+        "shop_id" TEXT NOT NULL,
+        "file_name" TEXT NOT NULL,
+        "version" TEXT NOT NULL,
+        "hash" TEXT NOT NULL,
+        "create_time" TEXT NOT NULL,
+         PRIMARY KEY (group_id,shop_id,file_name)
+        );
+    </update>
+
+    <update id="createPackPosTable">
+        CREATE TABLE IF NOT EXISTS t_pack_pos (
+        "group_id" TEXT NOT NULL,
+        "shop_id" TEXT NOT NULL,
+        "file_name" TEXT NOT NULL,
+        "version" TEXT NOT NULL,
+        "hash" TEXT NOT NULL,
+        "type" INTEGER NOT NULL DEFAULT (1),
+        "create_time" TEXT NOT NULL,
+        PRIMARY KEY (group_id,shop_id,file_name)
+        );
+    </update>
+
+    <update id="createShopTable">CREATE TABLE IF NOT EXISTS t_shop (
+     "group_id" TEXT NOT NULL,
+     "group_name" TEXT NOT NULL,
+     "shop_id" TEXT NOT NULL,
+     "shop_name" TEXT NOT NULL,
+     "db_host" TEXT NOT NULL,
+     "db_name" TEXT NOT NULL,
+     "db_user" TEXT NOT NULL,
+     "db_pass" TEXT NOT NULL,
+     "status" INTEGER NOT NULL,
+     PRIMARY KEY (group_id,shop_id)
+     );</update>
+
+    <update id="createSyjTable">CREATE TABLE IF NOT EXISTS t_syj (
+     "group_id" TEXT,
+     "shop_id" TEXT,
+     "syj_id" TEXT,
+     "version" TEXT,
+     "db_version" TEXT,
+     "type" INTEGER NOT NULL DEFAULT (0),
+     "update_time" TEXT NOT NULL,
+     PRIMARY KEY (group_id,shop_id,syj_id)
+     );</update>
+
+
+</mapper>

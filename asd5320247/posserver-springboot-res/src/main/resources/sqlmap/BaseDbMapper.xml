@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.posserver.posserverspringbootres.dao.BaseDbMapper">
+    <resultMap id="baseDbMap" type="com.posserver.posserverspringbootres.pojo.BaseDb">
+        <id column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <id column="shop_id" jdbcType="VARCHAR" property="shopId"/>
+        <id column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="hash" jdbcType="VARCHAR" property="hash"/>
+        <result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        group_id
+        , shop_id, file_name, version, hash, create_time
+    </sql>
+
+    <select id="selectAll" resultMap="baseDbMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_base_db
+        order by create_time desc
+    </select>
+
+    <select id="select" parameterType="com.posserver.posserverspringbootres.pojo.BaseDbKey"
+            resultMap="baseDbMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_base_db
+        where group_id= #{groupId} and shop_id= #{shopId} and file_name= #{fileName}
+    </select>
+
+    <select id="exists" parameterType="com.posserver.posserverspringbootres.pojo.BaseDbKey"
+            resultType="java.lang.Integer">
+        select count(*)
+        from t_base_db
+        where group_id = #{groupId}
+          and shop_id = #{shopId}
+          and file_name = #{fileName}
+    </select>
+
+    <insert id="insert" parameterType="com.posserver.posserverspringbootres.pojo.BaseDb">
+        insert into t_base_db(
+        <include refid="Base_Column_List"/>
+        ) values(
+        #{groupId},
+        #{shopId},
+        #{fileName},
+        #{version},
+        #{hash},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.posserver.posserverspringbootres.pojo.BaseDb">
+        update t_base_db
+        set version= #{version},
+            hash= #{hash},
+            create_time= #{createTime}
+        where group_id = #{groupId}
+          and shop_id = #{shopId}
+          and file_name = #{fileName}
+    </update>
+
+    <delete id="delete" parameterType="com.posserver.posserverspringbootres.pojo.BaseDbKey">
+        delete
+        from t_base_db
+        where hash = #{hash}
+    </delete>
+
+    <select id="selectLast" parameterType="java.util.Map" resultMap="baseDbMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_base_db
+        where group_id= #{groupId} and shop_id= #{shopId}
+        order by create_time desc limit 1
+    </select>
+</mapper>

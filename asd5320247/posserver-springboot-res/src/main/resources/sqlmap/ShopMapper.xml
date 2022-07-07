@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.posserver.posserverspringbootres.dao.ShopMapper">
+    <resultMap id="shopMap" type="com.posserver.posserverspringbootres.pojo.Shop">
+        <id column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <id column="shop_id" jdbcType="VARCHAR" property="shopId"/>
+        <result column="group_name" jdbcType="VARCHAR" property="groupName"/>
+        <result column="shop_name" jdbcType="VARCHAR" property="shopName"/>
+        <result column="db_host" jdbcType="VARCHAR" property="dbHost"/>
+        <result column="db_name" jdbcType="VARCHAR" property="dbName"/>
+        <result column="db_user" jdbcType="VARCHAR" property="dbUser"/>
+        <result column="db_pass" jdbcType="VARCHAR" property="dbPass"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+		group_id, shop_id, group_name, shop_name, db_host, db_name, db_user, db_pass, status
+	</sql>
+
+    <select id="selectAll" resultMap="shopMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_shop
+        order by group_id, shop_id
+    </select>
+
+    <select id="select" parameterType="com.posserver.posserverspringbootres.pojo.ShopKey" resultMap="shopMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_shop
+        where group_id= #{groupId} and shop_id= #{shopId}
+        order by group_id, shop_id
+    </select>
+
+    <select id="exists" parameterType="com.posserver.posserverspringbootres.pojo.ShopKey" resultType="java.lang.Integer">
+		select
+		count(*)
+		from t_shop
+		where group_id= #{groupId} and shop_id= #{shopId}
+		order by group_id, shop_id
+	</select>
+
+    <insert id="insert" parameterType="com.posserver.posserverspringbootres.pojo.Shop">
+        insert into t_shop(
+        <include refid="Base_Column_List"/>
+        )
+        values(
+        #{groupId},
+        #{shopId},
+        #{groupName},
+        #{shopName},
+        #{dbHost},
+        #{dbName},
+        #{dbUser},
+        #{dbPass},
+        #{status}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.posserver.posserverspringbootres.pojo.Shop">
+		update t_shop
+		set group_name= #{groupName}, shop_name= #{shopName}, db_host= #{dbHost}, db_name= #{dbName}, db_user= #{dbUser}, db_pass= #{dbPass}, status= #{status}
+		where group_id= #{groupId} and shop_id= #{shopId}
+	</update>
+
+    <delete id="delete" parameterType="com.posserver.posserverspringbootres.pojo.Shop">
+		delete from t_shop
+		where group_id= #{groupId} and shop_id= #{shopId}
+	</delete>
+
+    <select id="selectActivate" resultMap="shopMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_shop
+        where status= 1
+        order by group_id, shop_id
+    </select>
+
+</mapper>

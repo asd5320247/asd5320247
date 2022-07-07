@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.posserver.posserverspringbootres.dao.PackPosMapper">
+    <resultMap id="packPosMap" type="com.posserver.posserverspringbootres.pojo.PackPos">
+        <id column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <id column="shop_id" jdbcType="VARCHAR" property="shopId"/>
+        <id column="file_name" jdbcType="VARCHAR" property="fileName"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="hash" jdbcType="VARCHAR" property="hash"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+    </resultMap>
+    <parameterMap id="packPosMap" type="com.posserver.posserverspringbootres.pojo.PackPos">
+        <parameter jdbcType="VARCHAR" property="groupId"/>
+        <parameter jdbcType="VARCHAR" property="shopId"/>
+        <parameter jdbcType="VARCHAR" property="fileName"/>
+        <parameter jdbcType="VARCHAR" property="version"/>
+        <parameter jdbcType="VARCHAR" property="hash"/>
+        <parameter jdbcType="INTEGER" property="type"/>
+        <parameter jdbcType="VARCHAR" property="createTime"/>
+    </parameterMap>
+
+    <sql id="Base_Column_List">
+        group_id, shop_id, file_name, version, hash, type, create_time
+	</sql>
+
+    <select id="selectAll" resultMap="packPosMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_pack_pos
+        order by create_time desc
+    </select>
+
+    <select id="exists" parameterType="com.posserver.posserverspringbootres.pojo.PackPosKey" resultType="java.lang.Integer">
+        select
+		count(*)
+		from t_pack_pos
+		where group_id= #{groupId} and shop_id= #{shopId} and file_name= #{fileName}
+	</select>
+
+    <insert id="insert" parameterType="com.posserver.posserverspringbootres.pojo.PackPosKey">
+        insert into t_pack_pos(
+        <include refid="Base_Column_List"/>
+        ) values(
+        #{groupId},
+        #{shopId},
+        #{fileName},
+        #{version},
+        #{hash},
+        #{type},
+        #{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.posserver.posserverspringbootres.pojo.PackPos">
+        update t_pack_pos
+		set version= #{version}, hash= #{hash}, type= #{type}, create_time= #{createTime}
+		where group_id= #{groupId} and shop_id= #{shopId} and file_name= #{fileName}
+	</update>
+
+    <delete id="delete" parameterType="com.posserver.posserverspringbootres.pojo.PackPos">
+        delete from t_pack_pos
+		where group_id= #{groupId} and shop_id= #{shopId} and hash= #{fileName}
+	</delete>
+
+    <select id="selectLast" parameterType="java.util.Map" resultMap="packPosMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_pack_pos
+        where group_id= #{groupId} and shop_id= #{shopId}
+        <if test="type != null">
+            and type = #{type}
+        </if>
+        order by create_time desc limit 1
+    </select>
+</mapper>

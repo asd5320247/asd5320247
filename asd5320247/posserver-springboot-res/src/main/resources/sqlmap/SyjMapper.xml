@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.posserver.posserverspringbootres.dao.SyjMapper">
+    <resultMap id="syjMap" type="com.posserver.posserverspringbootres.pojo.Syj">
+        <id column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <id column="shop_id" jdbcType="VARCHAR" property="shopId"/>
+        <id column="syj_id" jdbcType="VARCHAR" property="syjId"/>
+        <result column="version" jdbcType="VARCHAR" property="version"/>
+        <result column="db_version" jdbcType="VARCHAR" property="dbVersion"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="update_time" jdbcType="VARCHAR" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        group_id, shop_id, syj_id, version, db_version, type, update_time
+    </sql>
+
+    <select id="selectAll" resultMap="syjMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_syj
+        order by group_id, shop_id, syj_id
+    </select>
+
+    <select id="select" parameterType="com.posserver.posserverspringbootres.pojo.SyjKey" resultMap="syjMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_syj
+        where group_id= #{groupId} and shop_id= #{shopId} and syj_id= #{syjId}
+        order by group_id, shop_id, syj_id
+    </select>
+
+    <select id="exists" parameterType="com.posserver.posserverspringbootres.pojo.SyjKey" resultType="java.lang.Integer">
+		select
+		count(*)
+		from t_syj
+		where group_id= #{groupId} and shop_id= #{shopId} and syj_id= #{syjId}
+	</select>
+
+    <insert id="insert" parameterType="com.posserver.posserverspringbootres.pojo.Syj">
+        insert into t_syj(
+        <include refid="Base_Column_List"/>
+        )
+        values(
+        #{groupId},
+        #{shopId},
+        #{syjId},
+        #{version},
+        #{dbVersion},
+        #{type},
+        #{updateTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="com.posserver.posserverspringbootres.pojo.Syj">
+		update t_syj
+		set version= #{version}, db_version= #{dbVersion}, type= #{type}, update_time= #{updateTime}
+		where group_id= #{groupId} and shop_id= #{shopId} and syj_id= #{syjId}
+	</update>
+
+    <delete id="delete" parameterType="com.posserver.posserverspringbootres.pojo.SyjKey">
+        delete from t_syj
+        where group_id= #{groupId} and shop_id= #{shopId} and syj_id= #{syjId}
+    </delete>
+
+    <update id="updateType">
+		update t_syj
+		set type= #{type}
+		where group_id= #{groupId} and shop_id= #{shopId} and syj_id= #{syjId}
+	</update>
+</mapper>
